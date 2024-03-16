@@ -19,7 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\cdf.cpp" />
+    <ClCompile Include="src\common.cpp" />
+    <ClCompile Include="src\gamma.cpp" />
+    <ClCompile Include="src\hist.cpp" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\cdf.h" />
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\gamma.h" />
+    <ClInclude Include="src\hist.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
