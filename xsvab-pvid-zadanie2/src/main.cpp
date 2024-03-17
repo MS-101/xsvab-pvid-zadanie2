@@ -16,7 +16,7 @@ int main()
 	}
 
 	cv::resize(input, input, cv::Size(input.cols / 2, input.rows / 2));
-	outputImage(input, { "input", "output\\", ".tif" });
+	outputImage(input, { "input", "output\\", ".png" });
 
 	// color correction with histogram
 
@@ -41,7 +41,7 @@ int main()
 	}
 
 	cv::resize(target, target, cv::Size(target.cols / 2, target.rows / 2));
-	outputImage(target, { "target", "output\\cdf\\", ".tif" });
+	outputImage(target, { "target", "output\\cdf\\", ".png" });
 
 	// color correction with cdf
 
@@ -58,7 +58,7 @@ int main()
 
 	cv::Rect centralRegion(centerX - maskSize / 2, centerY - maskSize / 2, maskSize, maskSize);
 	nucleiMask(centralRegion) = 255;
-	outputImage(nucleiMask, { "nuclei", "output\\segmentation\\", ".tif" });
+	outputImage(nucleiMask, { "nuclei", "output\\segmentation\\", ".png" });
 
 	segmentation(input, nucleiMask);
 

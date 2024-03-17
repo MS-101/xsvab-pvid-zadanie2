@@ -5,7 +5,7 @@
 void gammaCorrection(cv::Mat input, std::vector<double> gammas)
 {
 	std::string outputDir = "output\\gamma\\";
-	std::string outputExtension = ".tif";
+	std::string outputExtension = ".png";
 
 	cv::Mat converted = input;
 	input.convertTo(converted, CV_32F);

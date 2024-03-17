@@ -140,7 +140,7 @@ void cdf(cv::Mat input, cv::Mat target, cv::ColorConversionCodes conversion, cv:
 
 void cdfRGB(cv::Mat input, cv::Mat target)
 {
-	OutputArgs outputArgs = { "rgb", "output\\cdf\\rgb\\", ".tif" };
+	OutputArgs outputArgs = { "rgb", "output\\cdf\\rgb\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2RGB;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_RGB2BGR;
@@ -156,7 +156,7 @@ void cdfRGB(cv::Mat input, cv::Mat target)
 
 void cdfYCC(cv::Mat input, cv::Mat target)
 {
-	OutputArgs outputArgs = { "ycc", "output\\cdf\\ycc\\", ".tif" };
+	OutputArgs outputArgs = { "ycc", "output\\cdf\\ycc\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2YCrCb;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_YCrCb2BGR;

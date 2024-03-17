@@ -136,7 +136,7 @@ void hist(cv::Mat input, cv::ColorConversionCodes conversion, cv::ColorConversio
 
 void histGrayscale(cv::Mat input)
 {
-	OutputArgs outputArgs = { "grayscale", "output\\histogram\\grayscale\\", ".tif" };
+	OutputArgs outputArgs = { "grayscale", "output\\histogram\\grayscale\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2GRAY;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_GRAY2BGR;
@@ -153,7 +153,7 @@ void histGrayscale(cv::Mat input)
 
 void histRGB(cv::Mat input)
 {
-	OutputArgs outputArgs = { "rgb", "output\\histogram\\rgb\\", ".tif" };
+	OutputArgs outputArgs = { "rgb", "output\\histogram\\rgb\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2RGB;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_RGB2BGR;
@@ -170,7 +170,7 @@ void histRGB(cv::Mat input)
 
 void histYCC(cv::Mat input)
 {
-	OutputArgs outputArgs = { "ycc", "output\\histogram\\ycc\\", ".tif" };
+	OutputArgs outputArgs = { "ycc", "output\\histogram\\ycc\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2YCrCb;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_YCrCb2BGR;
@@ -187,7 +187,7 @@ void histYCC(cv::Mat input)
 
 void histHSV(cv::Mat input)
 {
-	OutputArgs outputArgs = { "hsv", "output\\histogram\\hsv\\", ".tif" };
+	OutputArgs outputArgs = { "hsv", "output\\histogram\\hsv\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2HSV;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_HSV2BGR;
@@ -205,7 +205,7 @@ void histHSV(cv::Mat input)
 
 void histXYZ(cv::Mat input)
 {
-	OutputArgs outputArgs = { "xyz", "output\\histogram\\xyz\\", ".tif" };
+	OutputArgs outputArgs = { "xyz", "output\\histogram\\xyz\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2XYZ;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_XYZ2BGR;
@@ -224,7 +224,7 @@ void histXYZ(cv::Mat input)
 
 void histLAB(cv::Mat input)
 {
-	OutputArgs outputArgs = { "lab", "output\\histogram\\lab\\", ".tif" };
+	OutputArgs outputArgs = { "lab", "output\\histogram\\lab\\", ".png" };
 
 	cv::ColorConversionCodes conversion = cv::COLOR_BGR2Lab;
 	cv::ColorConversionCodes inverseConversion = cv::COLOR_Lab2BGR;

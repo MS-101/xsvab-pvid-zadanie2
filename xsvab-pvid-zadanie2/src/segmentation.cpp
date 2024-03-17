@@ -5,7 +5,7 @@
 void segmentation(cv::Mat input, cv::Mat mask)
 {
 	std::string outputDir = "output\\segmentation\\";
-	std::string outputExtension = ".tif";
+	std::string outputExtension = ".png";
 
 	// convert to lab color space
 
