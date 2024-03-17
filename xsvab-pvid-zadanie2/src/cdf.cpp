@@ -140,10 +140,10 @@ void cdf(cv::Mat input, cv::Mat target, cv::ColorConversionCodes conversion, cv:
 
 void cdfRGB(cv::Mat input, cv::Mat target)
 {
-	OutputArgs outputArgs = { "rgb", "output\\ecdf\\rgb\\", ".tif" };
+	OutputArgs outputArgs = { "rgb", "output\\cdf\\rgb\\", ".tif" };
 
-	cv::ColorConversionCodes conversion = cv::COLOR_BGR2GRAY;
-	cv::ColorConversionCodes inverseConversion = cv::COLOR_GRAY2BGR;
+	cv::ColorConversionCodes conversion = cv::COLOR_BGR2RGB;
+	cv::ColorConversionCodes inverseConversion = cv::COLOR_RGB2BGR;
 
 	std::vector<cv::Scalar> colors = { cv::Scalar(0, 0, 255), cv::Scalar(0, 255, 0), cv::Scalar(255, 0, 0) };
 	std::vector<std::string> channelNames = { "R", "G", "B" };
