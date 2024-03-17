@@ -14,19 +14,19 @@ void displayHist(std::vector<cv::Mat> hist, std::vector<cv::Scalar> colors, std:
 	int histSize = hist[0].rows;
 	int binWidth = cvRound((double)width / histSize);
 
-	cv::Mat histImage(height, width, CV_8UC3, cv::Scalar(255, 255, 255));
+	cv::Mat image(height, width, CV_8UC3, cv::Scalar(255, 255, 255));
 
 	// normalize channels
 	for (int channelID = 0; channelID < hist.size(); channelID++)
-		cv::normalize(hist[channelID], hist[channelID], 0, histImage.rows, cv::NORM_MINMAX, -1, cv::Mat());
+		cv::normalize(hist[channelID], hist[channelID], 0, image.rows, cv::NORM_MINMAX, -1, cv::Mat());
 
 	// draw lines
-	for (int histX = 1; histX < histSize; histX++) {
-		for (int channelID = 0; channelID < hist.size(); channelID++) {
-			auto channel = hist[channelID];
-			auto color = colors[channelID];
+	for (int channelID = 0; channelID < hist.size(); channelID++) {
+		cv::Mat channel = hist[channelID];
+		cv::Scalar color = colors[channelID];
 
-			cv::line(histImage,
+		for (int histX = 1; histX < histSize; histX++) {
+			cv::line(image,
 				cv::Point(binWidth * (histX - 1), height - cvRound(channel.at<float>(histX - 1))),
 				cv::Point(binWidth * histX, height - cvRound(channel.at<float>(histX))),
 				color
@@ -39,11 +39,11 @@ void displayHist(std::vector<cv::Mat> hist, std::vector<cv::Scalar> colors, std:
 		auto color = colors[channelID];
 		auto channelName = channelNames[channelID];
 
-		cv::putText(histImage, channelName, cv::Point(10, 20 + channelID * 20),
+		cv::putText(image, channelName, cv::Point(10, 20 + channelID * 20),
 			cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 1);
 	}
 
-	outputImage(histImage, outputArgs);
+	outputImage(image, outputArgs);
 }
 
 void histogram(cv::Mat input, cv::ColorConversionCodes conversion, cv::ColorConversionCodes inverseConversion,

@@ -17,36 +17,76 @@ void calcCDF(std::vector<cv::Mat> hist, std::vector<cv::Mat>& cdf)
 	}
 }
 
-void displayCDF(std::vector<cv::Mat> cdf)
+void displayCDF(std::vector<cv::Mat> cdf, std::vector<cv::Scalar> colors, std::vector<std::string> channelNames, OutputArgs outputArgs)
 {
+	int width = 600, height = 500;
+	int histSize = 256;
 
-}
+	cv::Mat image(height, width, CV_8UC3, cv::Scalar(255, 255, 255));
 
-cv::Mat createLookupTable(cv::Mat inputCDF, cv::Mat targetCDF)
-{
-	cv::Mat lookupTable(1, 256, CV_8U);
+	// draw lines
+	for (int cdfID = 0; cdfID < cdf.size(); cdfID++) {
+		cv::Mat curCDF = cdf[cdfID];
+		cv::Scalar color = colors[cdfID];
 
-	for (int i = 0; i < 256; ++i) {
-		int j = 0;
-
-		while (j < 256 && inputCDF.at<float>(i) > targetCDF.at<float>(j))
-			++j;
-
-		lookupTable.at<uchar>(i) = cv::saturate_cast<uchar>(j);
+		for (int x = 1; x < histSize; ++x) {
+			cv::line(image,
+				cv::Point((x - 1) * 2, height - curCDF.at<float>(x - 1) * height),
+				cv::Point(x * 2, height - curCDF.at<float>(x) * height),
+				color
+			);
+		}
 	}
 
-	return lookupTable;
+	// add legend
+	for (int channelID = 0; channelID < colors.size(); channelID++) {
+		auto color = colors[channelID];
+		auto channelName = channelNames[channelID];
+
+		cv::putText(image, channelName, cv::Point(10, 20 + channelID * 20),
+			cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 1);
+	}
+
+	outputImage(image, outputArgs);
 }
 
-void cdf(cv::Mat input, cv::Mat target, std::vector<std::string> channelNames, std::vector<cv::Scalar> colors, const float* ranges[], OutputArgs outputArgs)
+void calcLookUpTable(std::vector<cv::Mat> inputCDF, std::vector<cv::Mat> targetCDF, std::vector<cv::Mat>& lookUpTable)
 {
+	for (int channelID = 0; channelID < lookUpTable.size(); channelID++) {
+		cv::Mat curInput = inputCDF[channelID];
+		cv::Mat curTarget = targetCDF[channelID];
+
+		for (int i = 0; i < 256; ++i) {
+			int j = 0;
+
+			while (j < 256 && curInput.at<float>(i) > curTarget.at<float>(j))
+				++j;
+
+			lookUpTable[channelID].at<uchar>(i) = cv::saturate_cast<uchar>(j);
+		}
+	}
+}
+
+void cdf(cv::Mat input, cv::Mat target, cv::ColorConversionCodes conversion, cv::ColorConversionCodes inverseConversion,
+	std::vector<std::string> channelNames, std::vector<cv::Scalar> colors, const float* ranges[], OutputArgs outputArgs)
+{
+	// convert images from bgr to different color space
+
+	cv::Mat convertedInput;
+	cv::cvtColor(input, convertedInput, conversion);
+	outputImage(convertedInput, { outputArgs.name + "_input", outputArgs.dir, outputArgs.extension});
+
+	cv::Mat convertedTarget;
+	cv::cvtColor(target, convertedTarget, conversion);
+	outputImage(convertedTarget, { outputArgs.name + "_target", outputArgs.dir, outputArgs.extension });
+
 	// split image channels
 
 	std::vector<cv::Mat> inputChannels;
-	cv::split(input, inputChannels);
+	cv::split(convertedInput, inputChannels);
 
 	std::vector<cv::Mat> targetChannels;
-	cv::split(target, targetChannels);
+	cv::split(convertedTarget, targetChannels);
 
 	int channelCount = inputChannels.size();
 
@@ -64,35 +104,68 @@ void cdf(cv::Mat input, cv::Mat target, std::vector<std::string> channelNames, s
 
 	std::vector<cv::Mat> inputCDF(channelCount);
 	calcCDF(inputHist, inputCDF);
-	displayCDF(inputCDF);
+	displayCDF(inputCDF, colors, channelNames, { "cdf_" + outputArgs.name + "_input", outputArgs.dir, outputArgs.extension });
 
 	std::vector<cv::Mat> targetCDF(channelCount);
 	calcCDF(targetHist, targetCDF);
-	displayCDF(targetCDF);
+	displayCDF(targetCDF, colors, channelNames, { "cdf_" + outputArgs.name + "_target", outputArgs.dir, outputArgs.extension });
 
-	// create lookup table
+	// calculate lookup table
+	
+	std::vector<cv::Mat> lookUpTable;
+	for (int channelID = 0; channelID < channelCount; channelID++) {
+		cv::Mat lut(1, 256, CV_8U);
+		lookUpTable.push_back(lut);
+	}
 
-
+	calcLookUpTable(inputCDF, targetCDF, lookUpTable);
 
 	// correct image
 
+	std::vector<cv::Mat> correctedChannels(channelCount);
+	for (int channelID = 0; channelID < channelCount; channelID++)
+		cv::LUT(inputChannels[channelID], lookUpTable[channelID], correctedChannels[channelID]);
 
+	cv::Mat corrected;
+	cv::merge(correctedChannels, corrected);
+
+	// display image
+
+	cv::Mat output;
+	cv::cvtColor(corrected, output, inverseConversion);
+	outputImage(output, { outputArgs.name + "_corrected", outputArgs.dir, outputArgs.extension });
+
+	cv::waitKey();
 }
 
 void cdfRGB(cv::Mat input, cv::Mat target)
 {
 	OutputArgs outputArgs = { "rgb", "output\\ecdf\\rgb\\", ".tif" };
 
-	float rgbRange[] = { 0, 256 };
-	const float* ranges[] = { rgbRange, rgbRange, rgbRange };
+	cv::ColorConversionCodes conversion = cv::COLOR_BGR2GRAY;
+	cv::ColorConversionCodes inverseConversion = cv::COLOR_GRAY2BGR;
 
 	std::vector<cv::Scalar> colors = { cv::Scalar(0, 0, 255), cv::Scalar(0, 255, 0), cv::Scalar(255, 0, 0) };
 	std::vector<std::string> channelNames = { "R", "G", "B" };
 
-	cdf(input, target, channelNames, colors, ranges, outputArgs);
+	float rgbRange[] = { 0, 256 };
+	const float* ranges[] = { rgbRange, rgbRange, rgbRange };
+
+	cdf(input, target, conversion, inverseConversion, channelNames, colors, ranges, outputArgs);
 }
 
 void cdfYCC(cv::Mat input, cv::Mat target)
 {
+	OutputArgs outputArgs = { "ycc", "output\\cdf\\ycc\\", ".tif" };
 
+	cv::ColorConversionCodes conversion = cv::COLOR_BGR2YCrCb;
+	cv::ColorConversionCodes inverseConversion = cv::COLOR_YCrCb2BGR;
+
+	std::vector<std::string> channelNames = { "Luma", "Chroma blue", "Chroma Red" };
+	std::vector<cv::Scalar> colors = { cv::Scalar(0, 255, 0), cv::Scalar(255, 0, 0), cv::Scalar(0, 0, 255) };
+
+	float yccRange[] = { 0, 256 };
+	const float* ranges[] = { yccRange, yccRange, yccRange };
+
+	cdf(input, target, conversion, inverseConversion, channelNames, colors, ranges, outputArgs);
 }
