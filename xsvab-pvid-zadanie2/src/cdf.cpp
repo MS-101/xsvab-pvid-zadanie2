@@ -62,7 +62,14 @@ void calcLookUpTable(std::vector<cv::Mat> inputCDF, std::vector<cv::Mat> targetC
 			while (j < 256 && curInput.at<float>(i) > curTarget.at<float>(j))
 				++j;
 
-			lookUpTable[channelID].at<uchar>(i) = cv::saturate_cast<uchar>(j);
+			if (j == 0) {
+				lookUpTable[channelID].at<uchar>(i) = 0;
+			} else if (j == 256) {
+				lookUpTable[channelID].at<uchar>(i) = 255;
+			} else {
+				float t = (curInput.at<float>(i) - curTarget.at<float>(j - 1)) / (curTarget.at<float>(j) - curTarget.at<float>(j - 1));
+				lookUpTable[channelID].at<uchar>(i) = cv::saturate_cast<uchar>(j - 1 + t);
+			}
 		}
 	}
 }
