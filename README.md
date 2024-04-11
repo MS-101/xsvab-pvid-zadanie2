@@ -6,7 +6,7 @@
 
 Tento obrázok je použitý ako vstup vo všetkých nasledujúcich úlohách. 
 
-![](xsvab-pvid-zadanie2\output\input.jpg)
+![](/xsvab-pvid-zadanie2/output/input.jpg)
 
 ## Histogram
 
