@@ -93,3 +93,181 @@ Výstup všetkých experimentov ekvalizácie histogramov má totožný formát. 
 ![](xsvab-pvid-zadanie2/output/histogram/ycc/histMerged.jpg)
 
 ![](xsvab-pvid-zadanie2/output/histogram/ycc/imagesMerged.jpg)
+
+## Gamma
+
+TBA
+
+	void gammaCorrection(cv::Mat input, std::vector<double> gammas)
+	{
+		std::string outputDir = "output\\gamma\\";
+		std::string outputExtension = ".png";
+	
+		cv::Mat converted = input;
+		input.convertTo(converted, CV_32F);
+	
+		for (int gammaID = 0; gammaID < gammas.size(); gammaID++)
+		{
+			double gamma = gammas[gammaID];
+			std::string outputName = "gamma" + std::to_string(gammaID);
+	
+			cv::Mat corrected;
+			cv::pow(converted, gamma, corrected);
+	
+			cv::Mat normalized;
+			cv::normalize(corrected, normalized, 0, 255, cv::NORM_MINMAX);
+	
+			cv::Mat output;
+			normalized.convertTo(output, CV_8U);
+	
+			outputImage(output, { outputName, outputDir, outputExtension });
+		}
+	
+		cv::waitKey();
+	}
+
+## CDF
+
+TBA
+
+	void cdf(cv::Mat input, cv::Mat target, cv::ColorConversionCodes conversion, cv::ColorConversionCodes inverseConversion,
+		std::vector<std::string> channelNames, std::vector<cv::Scalar> colors, const float* ranges[], OutputArgs outputArgs)
+	{
+		// convert images from bgr to different color space
+	
+		cv::Mat convertedInput;
+		cv::cvtColor(input, convertedInput, conversion);
+		outputImage(convertedInput, { outputArgs.name + "_input", outputArgs.dir, outputArgs.extension});
+	
+		cv::Mat convertedTarget;
+		cv::cvtColor(target, convertedTarget, conversion);
+		outputImage(convertedTarget, { outputArgs.name + "_target", outputArgs.dir, outputArgs.extension });
+	
+		// split image channels
+	
+		std::vector<cv::Mat> inputChannels;
+		cv::split(convertedInput, inputChannels);
+	
+		std::vector<cv::Mat> targetChannels;
+		cv::split(convertedTarget, targetChannels);
+	
+		int channelCount = inputChannels.size();
+	
+		// calculate histograms
+	
+		std::vector<cv::Mat> inputHist(channelCount);
+		calcHist(inputChannels, inputHist, ranges);
+		displayHist(inputHist, colors, channelNames, { "hist_" + outputArgs.name + "_input", outputArgs.dir, outputArgs.extension });
+	
+		std::vector<cv::Mat> targetHist(channelCount);
+		calcHist(targetChannels, targetHist, ranges);
+		displayHist(targetHist, colors, channelNames, { "hist_" + outputArgs.name + "_target", outputArgs.dir, outputArgs.extension });
+	
+		// calculate cdf
+	
+		std::vector<cv::Mat> inputCDF(channelCount);
+		calcCDF(inputHist, inputCDF);
+		displayCDF(inputCDF, colors, channelNames, { "cdf_" + outputArgs.name + "_input", outputArgs.dir, outputArgs.extension });
+	
+		std::vector<cv::Mat> targetCDF(channelCount);
+		calcCDF(targetHist, targetCDF);
+		displayCDF(targetCDF, colors, channelNames, { "cdf_" + outputArgs.name + "_target", outputArgs.dir, outputArgs.extension });
+	
+		// calculate lookup table
+		
+		std::vector<cv::Mat> lookUpTable;
+		for (int channelID = 0; channelID < channelCount; channelID++) {
+			cv::Mat lut(1, 256, CV_8U);
+			lookUpTable.push_back(lut);
+		}
+	
+		calcLookUpTable(inputCDF, targetCDF, lookUpTable);
+	
+		// correct image
+	
+		std::vector<cv::Mat> correctedChannels(channelCount);
+		for (int channelID = 0; channelID < channelCount; channelID++)
+			cv::LUT(inputChannels[channelID], lookUpTable[channelID], correctedChannels[channelID]);
+	
+		cv::Mat corrected;
+		cv::merge(correctedChannels, corrected);
+	
+		// display image
+	
+		cv::Mat output;
+		cv::cvtColor(corrected, output, inverseConversion);
+		outputImage(output, { outputArgs.name + "_corrected", outputArgs.dir, outputArgs.extension });
+	
+		cv::waitKey();
+	}
+
+## Segmentácia
+
+V tomto experimente konvertujeme vstupný obrázok do Lab farebného priestoru. Kanály konvertovaného obrázka rozdelíme a vypočítaním priemeru s použitím masky nukleidu získame cieľové kanály. Pomocu vstupných a cieľových kanálov vypočítame delta lab. Na delta lab obrázku vykonáme binárny thresholding s hodnotou 30. Takto získame masku všetkých nukleidov. Aplikovaním tejto masky získame výstupný obrázok, kde vidíme vysegmentované nukleidy.
+
+	void segmentation(cv::Mat input, cv::Mat mask)
+	{
+		std::string outputDir = "output\\segmentation\\";
+		std::string outputExtension = ".png";
+	
+		// convert to lab color space
+	
+		cv::Mat inputLab;
+		cv::cvtColor(input, inputLab, cv::COLOR_BGR2Lab);
+		outputImage(inputLab, { "input_lab", outputDir, outputExtension });
+	
+		// split channels
+	
+		std::vector<cv::Mat> inputChannels;
+		cv::split(inputLab, inputChannels);
+		int channelCount = inputChannels.size();
+	
+		// compute target
+	
+		std::vector<cv::Scalar> targetChannels(channelCount);
+		for (int channelID = 0; channelID < channelCount; channelID++)
+			targetChannels[channelID] = cv::mean(inputChannels[channelID], mask);
+	
+		// compute delta lab
+	
+		cv::Mat delta_l, delta_a, delta_b;
+		cv::absdiff(inputChannels[0], targetChannels[0], delta_l);
+		cv::absdiff(inputChannels[1], targetChannels[1], delta_a);
+		cv::absdiff(inputChannels[2], targetChannels[2], delta_b);
+	
+		delta_l.convertTo(delta_l, CV_32F);
+		delta_a.convertTo(delta_a, CV_32F);
+		delta_b.convertTo(delta_b, CV_32F);
+	
+		cv::Mat delta_lab;
+		cv::sqrt(delta_l.mul(delta_l) + delta_a.mul(delta_a) + delta_b.mul(delta_b), delta_lab);
+		delta_lab.convertTo(delta_lab, CV_8U);
+		outputImage(delta_lab, { "delta_lab", outputDir, outputExtension });
+	
+		// perform thresholding
+	
+		cv::Mat threshold;
+		cv::threshold(delta_lab, threshold, 30, 255, cv::THRESH_BINARY);
+		outputImage(threshold, { "threshold", outputDir, outputExtension });
+		threshold.convertTo(threshold, CV_8U);
+	
+		// display output
+	
+		cv::Mat output;
+		input.copyTo(output, threshold);
+		outputImage(output, { "output", outputDir, outputExtension });
+	
+		cv::waitKey();
+	}
+
+Maska pre nukleid:
+
+![](xsvab-pvid-zadanie2/output/segmentation/nuclei.jpg)
+
+Delta lab a jeho threshold:
+
+![](xsvab-pvid-zadanie2/output/segmentation/deltaLab.jpg)
+
+Porovnanie vstupného a výstupneho obrázku:
+
+![](xsvab-pvid-zadanie2/output/segmentation/images.jpg)
