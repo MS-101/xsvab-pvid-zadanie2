@@ -6,7 +6,7 @@
 
 Tento obrázok je použitý ako vstup vo všetkých nasledujúcich úlohách. 
 
-![](/xsvab-pvid-zadanie2/output/input.jpg)
+![](xsvab-pvid-zadanie2/output/input.jpg)
 
 ## Histogram
 
@@ -60,36 +60,36 @@ Výstup všetkých experimentov ekvalizácie histogramov má totožný formát. 
 
 ### Histogram - Grayscale
 
-![](xsvab-pvid-zadanie2\output\histogram\grayscale\histMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/grayscale/histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\grayscale\imagesMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/grayscale/imagesMerged.jpg)
 
 ### Histogram - HSV
 
-![](xsvab-pvid-zadanie2\output\histogram\hsv\histMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/hsv/histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\hsv\imagesMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/hsv/imagesMerged.jpg)
 
 ### Histogram - LAB
 
-![](xsvab-pvid-zadanie2\output\histogram\lab\histMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/lab/histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\lab\imagesMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/lab/imagesMerged.jpg)
 
 ### Histogram - RGB
 
-![](xsvab-pvid-zadanie2\output\histogram\rgb\histMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/rgb/histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\rgb\imagesMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/rgb/imagesMerged.jpg)
 
 ### Histogram - XYZ
 
-![](xsvab-pvid-zadanie2\output\histogram\xyz\histMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/xyz/histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\xyz\imagesMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/xyz/imagesMerged.jpg)
 
 ### Histogram - YCrCb
 
-![](xsvab-pvid-zadanie2\output\histogram\ycc\histMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/ycc/histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\ycc\imagesMerged.jpg)
+![](xsvab-pvid-zadanie2/output/histogram/ycc/imagesMerged.jpg)
