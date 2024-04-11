@@ -6,7 +6,7 @@
 
 Tento obrázok je použitý ako vstup vo všetkých nasledujúcich úlohách. 
 
-![](xsvab-pvid-zadanie2\output\input.png)
+![](xsvab-pvid-zadanie2\output\input.jpg)
 
 ## Histogram
 
@@ -93,109 +93,3 @@ Výstup všetkých experimentov ekvalizácie histogramov má totožný formát. 
 ![](xsvab-pvid-zadanie2\output\histogram\ycc\histMerged.jpg)
 
 ![](xsvab-pvid-zadanie2\output\histogram\ycc\imagesMerged.jpg)
-
-## Gamma
-
-Gamma = -0.5:
-
-![](xsvab-pvid-zadanie2\output\gamma\gamma0.png)
-
-Gamma = 0.5:
-
-![](xsvab-pvid-zadanie2\output\gamma\gamma1.png)
-
-Gamma = 1.5:
-
-![](xsvab-pvid-zadanie2\output\gamma\gamma2.png)
-
-Gamma = 2.5:
-
-![](xsvab-pvid-zadanie2\output\gamma\gamma3.png)
-
-## CDF
-
-Tento obrázok je použitý ako cieľový obrázok pri korekcii farieb pomocou cdf:
-
-![](xsvab-pvid-zadanie2\output\cdf\target.png)
-
-### CDF - RGB
-
-Vstupný obrázok konvertovaný do RGB:
-
-![](xsvab-pvid-zadanie2\output\cdf\rgb\rgb_input.png)
-
-Cieľový obrázok konvertovaný do RGB:
-
-![](xsvab-pvid-zadanie2\output\cdf\rgb\rgb_target.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\rgb\hist_rgb_input.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\rgb\hist_rgb_target.png)
-
-CDF vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\rgb\cdf_rgb_input.png)
-
-CDF cieľového obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\rgb\cdf_rgb_target.png)
-
-Výstupný obrázok (po konverzii do BGR):
-
-![](xsvab-pvid-zadanie2\output\cdf\rgb\rgb_corrected.png)
-
-### CDF - YCrCb
-
-Vstupný obrázok konvertovaný do YCrCb:
-
-![](xsvab-pvid-zadanie2\output\cdf\ycc\ycc_input.png)
-
-Cieľový obrázok konvertovaný do YCrCb:
-
-![](xsvab-pvid-zadanie2\output\cdf\ycc\ycc_target.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\ycc\hist_ycc_input.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\ycc\hist_ycc_target.png)
-
-CDF vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\ycc\cdf_ycc_input.png)
-
-CDF cieľového obrázka:
-
-![](xsvab-pvid-zadanie2\output\cdf\ycc\cdf_ycc_target.png)
-
-Výstupný obrázok (po konverzii do BGR):
-
-![](xsvab-pvid-zadanie2\output\cdf\ycc\ycc_corrected.png)
-
-## Segmentácia
-
-Vstupný obrázok konvertovaný do Lab:
-
-![](xsvab-pvid-zadanie2\output\segmentation\input_lab.png)
-
-Maska pre nukleid:
-
-![](xsvab-pvid-zadanie2\output\segmentation\nuclei.png)
-
-Delta lab:
-
-![](xsvab-pvid-zadanie2\output\segmentation\delta_lab.png)
-
-Threshold vypočítaný z delta lab:
-
-![](xsvab-pvid-zadanie2\output\segmentation\threshold.png)
-
-Výstupný obrázok:
-
-![](xsvab-pvid-zadanie2\output\segmentation\output.png)
