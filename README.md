@@ -10,113 +10,89 @@ Tento obrázok je použitý ako vstup vo všetkých nasledujúcich úlohách.
 
 ## Histogram
 
+Pri všetkých experimentoch s normalizáciou histogramov používame totožný algoritmus. Najskôr konvertujeme vstupný obrázok do nášho zvoleného farebného priestoru. Kanály konvertovaného obrázka rozdelíme a individuálne na nich vykonáme histogramovu equalizáciu. Upravenné kanály spojíme a získame tak výstupný obrázok, ktorý spätne konvertujeme do BGR farebného priestoru. z kanálov pôvodného aj upraveného obrázka vypočítame a zobrazíme histogramy. 
+
+	void histogram(cv::Mat input, cv::ColorConversionCodes conversion, cv::ColorConversionCodes inverseConversion,
+		std::vector<std::string> channelNames, std::vector<cv::Scalar> colors, bool corrections[], const float* ranges[], OutputArgs outputArgs)
+	{
+		// convert image from bgr to different color space
+		cv::Mat converted;
+		cv::cvtColor(input, converted, conversion);
+		outputImage(converted, outputArgs);
+	
+		// split image channels
+		std::vector<cv::Mat> channels;
+		cv::split(converted, channels);
+		int channelCount = channels.size();
+	
+		// correct channels with histogram equalization
+		std::vector<cv::Mat> channelsCorrected(channelCount);
+		for (int i = 0; i < channelCount; i++) {
+			if (corrections[i])
+				cv::equalizeHist(channels[i], channelsCorrected[i]);
+			else
+				channelsCorrected[i] = channels[i];
+		}
+	
+		// merge corrected channels
+		cv::Mat corrected;
+		cv::merge(channelsCorrected, corrected);
+	
+		// display histogram of original image
+		std::vector<cv::Mat> hist(channelCount);
+		calcHist(channels, hist, ranges);
+		displayHist(hist, colors, channelNames, { "hist_" + outputArgs.name, outputArgs.dir, outputArgs.extension });
+	
+		// display histogram of corrected image
+		std::vector<cv::Mat> histCorrected(channelCount);
+		calcHist(channelsCorrected, histCorrected, ranges);
+		displayHist(histCorrected, colors, channelNames, { "hist_" + outputArgs.name + "_corrected", outputArgs.dir, outputArgs.extension });
+	
+		// display corrected image
+		cv::Mat output;
+		cv::cvtColor(corrected, output, inverseConversion);
+		outputImage(output, { outputArgs.name + "_corrected", outputArgs.dir, outputArgs.extension });
+	
+		cv::waitKey();
+	}
+
+Výstup všetkých experimentov ekvalizácie histogramov má totožný formát. Horný obrázok obsahuje naľavo histogram pred ekvalizáciou a napravo histogram po ekvalizácii. Spodný obrázok obsahuje naľavo vstupný obrázok a napravo výstupný obrázok.
+
 ### Histogram - Grayscale
 
-Vstupný obrázok konvertovaný do Grayscale:
+![](xsvab-pvid-zadanie2\output\histogram\grayscale\histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\grayscale\grayscale.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\histogram\grayscale\hist_grayscale.png)
-
-Histogram vstupného obrázka po ekvalizácii:
-
-![](xsvab-pvid-zadanie2\output\histogram\grayscale\hist_grayscale_corrected.png)
-
-Výstupný obrázok
-
-![](xsvab-pvid-zadanie2\output\histogram\grayscale\grayscale_corrected.png)
+![](xsvab-pvid-zadanie2\output\histogram\grayscale\imagesMerged.jpg)
 
 ### Histogram - HSV
 
-Vstupný obrázok konvertovaný do RGB:
+![](xsvab-pvid-zadanie2\output\histogram\hsv\histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\hsv\hsv.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\histogram\hsv\hist_hsv.png)
-
-Histogram vstupného obrázka po ekvalizácii:
-
-![](xsvab-pvid-zadanie2\output\histogram\hsv\hist_hsv_corrected.png)
-
-Výstupný obrázok
-
-![](xsvab-pvid-zadanie2\output\histogram\hsv\hsv_corrected.png)
+![](xsvab-pvid-zadanie2\output\histogram\hsv\imagesMerged.jpg)
 
 ### Histogram - LAB
 
-Vstupný obrázok konvertovaný do RGB:
+![](xsvab-pvid-zadanie2\output\histogram\lab\histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\lab\lab.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\histogram\lab\hist_lab.png)
-
-Histogram vstupného obrázka po ekvalizácii:
-
-![](xsvab-pvid-zadanie2\output\histogram\lab\hist_lab_corrected.png)
-
-Výstupný obrázok
-
-![](xsvab-pvid-zadanie2\output\histogram\lab\lab_corrected.png)
+![](xsvab-pvid-zadanie2\output\histogram\lab\imagesMerged.jpg)
 
 ### Histogram - RGB
 
-Vstupný obrázok konvertovaný do RGB:
+![](xsvab-pvid-zadanie2\output\histogram\rgb\histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\rgb\rgb.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\histogram\rgb\hist_rgb.png)
-
-Histogram vstupného obrázka po ekvalizácii:
-
-![](xsvab-pvid-zadanie2\output\histogram\rgb\hist_rgb_corrected.png)
-
-Výstupný obrázok
-
-![](xsvab-pvid-zadanie2\output\histogram\rgb\rgb_corrected.png)
+![](xsvab-pvid-zadanie2\output\histogram\rgb\imagesMerged.jpg)
 
 ### Histogram - XYZ
 
-Vstupný obrázok konvertovaný do XYZ:
+![](xsvab-pvid-zadanie2\output\histogram\xyz\histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\xyz\xyz.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\histogram\xyz\hist_xyz.png)
-
-Histogram vstupného obrázka po ekvalizácii:
-
-![](xsvab-pvid-zadanie2\output\histogram\xyz\hist_xyz_corrected.png)
-
-Výstupný obrázok
-
-![](xsvab-pvid-zadanie2\output\histogram\xyz\xyz_corrected.png)
+![](xsvab-pvid-zadanie2\output\histogram\xyz\imagesMerged.jpg)
 
 ### Histogram - YCrCb
 
-Vstupný obrázok konvertovaný do YCrCb:
+![](xsvab-pvid-zadanie2\output\histogram\ycc\histMerged.jpg)
 
-![](xsvab-pvid-zadanie2\output\histogram\ycc\ycc.png)
-
-Histogram vstupného obrázka:
-
-![](xsvab-pvid-zadanie2\output\histogram\ycc\hist_ycc.png)
-
-Histogram vstupného obrázka po ekvalizácii:
-
-![](xsvab-pvid-zadanie2\output\histogram\ycc\hist_ycc_corrected.png)
-
-Výstupný obrázok
-
-![](xsvab-pvid-zadanie2\output\histogram\ycc\ycc_corrected.png)
+![](xsvab-pvid-zadanie2\output\histogram\ycc\imagesMerged.jpg)
 
 ## Gamma
 
