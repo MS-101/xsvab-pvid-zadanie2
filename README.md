@@ -56,47 +56,69 @@ Pri všetkých experimentoch s normalizáciou histogramov používame totožný 
 		cv::waitKey();
 	}
 
-Výstup všetkých experimentov ekvalizácie histogramov má totožný formát. Horný obrázok obsahuje naľavo histogram pred ekvalizáciou a napravo histogram po ekvalizácii. Spodný obrázok obsahuje naľavo vstupný obrázok a napravo výstupný obrázok.
-
 ### Histogram - Grayscale
 
+Vstupný a výstupný histogram:
+
 ![](xsvab-pvid-zadanie2/output/histogram/grayscale/histMerged.jpg)
+
+Vstupný a výstupný obrázok:
 
 ![](xsvab-pvid-zadanie2/output/histogram/grayscale/imagesMerged.jpg)
 
 ### Histogram - HSV
 
+Vstupný a výstupný histogram:
+
 ![](xsvab-pvid-zadanie2/output/histogram/hsv/histMerged.jpg)
+
+Vstupný a výstupný obrázok:
 
 ![](xsvab-pvid-zadanie2/output/histogram/hsv/imagesMerged.jpg)
 
 ### Histogram - LAB
 
+Vstupný a výstupný histogram:
+
 ![](xsvab-pvid-zadanie2/output/histogram/lab/histMerged.jpg)
+
+Vstupný a výstupný obrázok:
 
 ![](xsvab-pvid-zadanie2/output/histogram/lab/imagesMerged.jpg)
 
 ### Histogram - RGB
 
+Vstupný a výstupný histogram:
+
 ![](xsvab-pvid-zadanie2/output/histogram/rgb/histMerged.jpg)
+
+Vstupný a výstupný obrázok:
 
 ![](xsvab-pvid-zadanie2/output/histogram/rgb/imagesMerged.jpg)
 
 ### Histogram - XYZ
 
+Vstupný a výstupný histogram:
+
 ![](xsvab-pvid-zadanie2/output/histogram/xyz/histMerged.jpg)
+
+Vstupný a výstupný obrázok:
 
 ![](xsvab-pvid-zadanie2/output/histogram/xyz/imagesMerged.jpg)
 
 ### Histogram - YCrCb
 
+Vstupný a výstupný histogram:
+
 ![](xsvab-pvid-zadanie2/output/histogram/ycc/histMerged.jpg)
+
+Vstupný a výstupný obrázok:
 
 ![](xsvab-pvid-zadanie2/output/histogram/ycc/imagesMerged.jpg)
 
 ## Gamma
 
-TBA
+S rôznymi hodnotami gamma sme vykonali gamma korekciu vstupného obrázku. Hodnoty obrázku sme po korekcii znormalizovali. Experiment sme vykonali pre 4 rôzne hodnoty gamma [-0.5; 0,.5; 1.5; 2.5] (pre všetky výsledky si pozrite súbory v priečinku output/gamma/).
 
 	void gammaCorrection(cv::Mat input, std::vector<double> gammas)
 	{
@@ -126,9 +148,13 @@ TBA
 		cv::waitKey();
 	}
 
+Vstupný a výstupný obrázok [gamma = 1.5]:
+
+![](xsvab-pvid-zadanie2/output/gamma/gamma.jpg)
+
 ## CDF
 
-TBA
+V tomto experimente využívame na korekciu farby distribučnú funkciu. Najskôr konvertujeme vstupný a cieľový obrázok do našej zvolenej farebnej schémy. Z konvertovaných obrázkov vypočítame histogramy. Z histogramov vypočítame cdf. Zo vstupnej a cieľovej cdf vypočítame lookup tabuľku. Pomocou tejto tabuľky premapujeme farby na vstupnom obrázku. Tento obrázok prekonvertujeme späť do BGR farebnej schémy a získame výstupný obrázok.
 
 	void cdf(cv::Mat input, cv::Mat target, cv::ColorConversionCodes conversion, cv::ColorConversionCodes inverseConversion,
 		std::vector<std::string> channelNames, std::vector<cv::Scalar> colors, const float* ranges[], OutputArgs outputArgs)
@@ -201,6 +227,38 @@ TBA
 		cv::waitKey();
 	}
 
+Vstupný a cieľový obrázok:
+
+![](xsvab-pvid-zadanie2/output/cdf/imagesMerged.jpg)
+
+### RGB
+
+Vstupný a cieľový histogram:
+
+![](xsvab-pvid-zadanie2/output/cdf/rgb/histMerged.jpg)
+
+Vstupné a cieľové cdf:
+
+![](xsvab-pvid-zadanie2/output/cdf/rgb/cdfMerged.jpg)
+
+Výstupný obrázok:
+
+![](xsvab-pvid-zadanie2/output/cdf/rgb/output.jpg)
+
+### YCC
+
+Vstupný a cieľový histogram:
+
+![](xsvab-pvid-zadanie2/output/cdf/ycc/histMerged.jpg)
+
+Vstupné a cieľové cdf:
+
+![](xsvab-pvid-zadanie2/output/cdf/ycc/cdfMerged.jpg)
+
+Výstupný obrázok:
+
+![](xsvab-pvid-zadanie2/output/cdf/ycc/output.jpg)
+
 ## Segmentácia
 
 V tomto experimente konvertujeme vstupný obrázok do Lab farebného priestoru. Kanály konvertovaného obrázka rozdelíme a vypočítaním priemeru s použitím masky nukleidu získame cieľové kanály. Pomocu vstupných a cieľových kanálov vypočítame delta lab. Na delta lab obrázku vykonáme binárny thresholding s hodnotou 30. Takto získame masku všetkých nukleidov. Aplikovaním tejto masky získame výstupný obrázok, kde vidíme vysegmentované nukleidy.
@@ -268,6 +326,6 @@ Delta lab a jeho threshold:
 
 ![](xsvab-pvid-zadanie2/output/segmentation/deltaLab.jpg)
 
-Porovnanie vstupného a výstupneho obrázku:
+Vstupný a výstupný obrázok:
 
 ![](xsvab-pvid-zadanie2/output/segmentation/images.jpg)
